@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Veracity Proof Handler API",
+    "version": "1.0.0",
+    "description": "API documentation for the Data Veracity Proof Handler"
+  },
+  "tags": [
+    {
+      "name": "proof",
+      "description": "Operations related to proofs"
+    }
+  ],
+  "paths": {
+    "/proof": {
+      "get": {
+        "summary": "Get all proofs",
+        "tags": [
+          "proof"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Proof"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proof/{exchangeId}": {
+      "parameters": [
+        {
+          "name": "exchangeId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "651f2e8f734ea5932e5c76a2"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get proof by ID",
+        "tags": [
+          "proof"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Proof"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proof/{exchangeId}/{participant}": {
+      "parameters": [
+        {
+          "name": "exchangeId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "651f2e8f734ea5932e5c76a2"
+          }
+        },
+        {
+          "name": "participant",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "participant1"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Upload evaluation result",
+        "tags": [
+          "proof"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HasedResult"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Proof"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HasedResult": {
+        "type": "object",
+        "properties": {
+          "participant": {
+            "type": "string"
+          },
+          "resultHash": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "participant",
+          "resultHash"
+        ]
+      },
+      "Proof": {
+        "type": "object",
+        "properties": {
+          "exchangeId": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HasedResult"
+            }
+          },
+          "match": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "exchangeId",
+          "results",
+          "match"
+        ]
+      }
+    }
+  }
+}

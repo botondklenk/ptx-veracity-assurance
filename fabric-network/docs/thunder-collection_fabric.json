@@ -1,0 +1,277 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "fabric",
+    "dateExported": "2024-03-17T12:07:12.965Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "200d8f2a-1f83-4490-a9a3-eb5008197ffd",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "get token",
+            "url": "/user/enroll",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-03-16T16:58:36.002Z",
+            "modified": "2024-03-16T17:11:33.686Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"id\": \"admin\",\n  \"secret\": \"adminpw\"\n}",
+                "form": []
+            },
+            "reqType": "post",
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.token",
+                    "action": "setto",
+                    "value": "{{token}}"
+                }
+            ]
+        },
+        {
+            "_id": "461315d0-97f2-4fec-81be-a229424d0f3c",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "regenerate token",
+            "url": "/user/reenroll",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-03-16T16:59:41.662Z",
+            "modified": "2024-03-16T17:12:14.081Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "reqType": "post",
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": [
+                {
+                    "type": "set-env-var",
+                    "custom": "json.toen",
+                    "action": "setto",
+                    "value": "{{token}}"
+                }
+            ]
+        },
+        {
+            "_id": "85473c02-bd54-4a98-91c9-f989926d8237",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "register",
+            "url": "/user/register",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-03-16T17:10:47.100Z",
+            "modified": "2024-03-16T17:13:43.940Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"id\": \"user1\",\n  \"secret\": \"1234\"\n}",
+                "form": []
+            },
+            "reqType": "post",
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "8d4d3a81-9ba9-488f-a6ef-ca9c6e873eec",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "list users",
+            "url": "/user/identities",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-03-16T17:13:18.009Z",
+            "modified": "2024-03-16T17:14:08.776Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "3b3b0764-13fe-4c3c-bff5-3e17c28a0a98",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "discover channel",
+            "url": "/discover/my-channel1",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2024-03-16T23:09:34.192Z",
+            "modified": "2024-03-16T23:10:49.964Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "11d712bb-a319-4db5-810b-47f87840b352",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "invoke put key 1 value one",
+            "url": "/invoke/my-channel1/chaincode1",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-03-17T00:05:30.018Z",
+            "modified": "2024-03-17T00:06:36.193Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"method\": \"KVContract:put\",\n  \"args\": [\n    \"1\", \"one\"\n    ],\n  \"transient\": {}\n}",
+                "form": []
+            },
+            "reqType": "post",
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "93d8d792-3506-4a05-a3c0-4275f8420cba",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "invoke get key 1",
+            "url": "/invoke/my-channel1/chaincode1",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2024-03-16T23:14:38.176Z",
+            "modified": "2024-03-17T00:03:44.701Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"method\": \"KVContract:get\",\n  \"args\": [\n    \"1\"\n    ],\n  \"transient\": {}\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "112cdd20-5e7d-4d40-a27a-de0af99bf751",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "invoke put private message",
+            "url": "/invoke/my-channel1/chaincode1",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2024-03-17T11:43:28.769Z",
+            "modified": "2024-03-17T11:47:28.987Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"method\": \"KVContract:putPrivateMessage\",\n  \"args\": [\n    \"coll-org1-org2\"\n    ],\n  \"transient\": {\n    \"message\": \"private-one\"\n  }\n}",
+                "form": []
+            },
+            "reqType": "post",
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "028bcc7a-62f9-449d-8fdf-4eba26abbc2d",
+            "colId": "8a2c3a88-bda7-40f9-8a1e-3cd2f16c1ae3",
+            "containerId": "",
+            "name": "invoke get private message",
+            "url": "/invoke/my-channel1/chaincode1",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2024-03-17T11:41:23.712Z",
+            "modified": "2024-03-17T11:47:27.791Z",
+            "headers": [
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"method\": \"KVContract:getPrivateMessage\",\n  \"args\": [\n    \"coll-org1-org2\"\n    ],\n  \"transient\": {}\n}",
+                "form": []
+            },
+            "reqType": "post",
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        }
+    ],
+    "settings": {
+        "options": {
+            "baseUrl": "http://localhost:8801"
+        },
+        "envId": "b128492c-38ac-4c6c-bdc8-3ded84ced828"
+    }
+}

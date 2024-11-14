@@ -1,0 +1,186 @@
+{
+    "vla": {
+        "meta": {
+            "description": "VLA for xAPI data",
+            "provider": "UniX",
+            "consumer": "BME",
+            "dataType": "JSON",
+            "status": "SINGED",
+            "timestamp": "2024-03-01T00:00:00.000Z"
+        },
+        "objectives": [
+            {
+                "description": "xAPI schema validation",
+                "aspect": "syntax",
+                "evaluation": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "statement": {
+                                "type": "object",
+                                "properties": {
+                                    "actor": {
+                                        "type": "object",
+                                        "properties": {
+                                            "account": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "homePage": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "name",
+                                                    "homePage"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "account"
+                                        ]
+                                    },
+                                    "verb": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            }
+                                        },
+                                        "required": [
+                                            "id"
+                                        ]
+                                    },
+                                    "object": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            },
+                                            "definition": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "type": "string",
+                                                        "format": "uri"
+                                                    },
+                                                    "name": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "en": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "en"
+                                                        ]
+                                                    }
+                                                },
+                                                "required": [
+                                                    "type",
+                                                    "name"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "definition"
+                                        ]
+                                    },
+                                    "context": {
+                                        "type": "object",
+                                        "properties": {
+                                            "contextActivities": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "category": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "string",
+                                                                    "format": "uri"
+                                                                },
+                                                                "definition": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "format": "uri"
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "type"
+                                                                    ]
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "id",
+                                                                "definition"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "category"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "contextActivities"
+                                        ]
+                                    },
+                                    "timestamp": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "required": [
+                                    "actor",
+                                    "verb",
+                                    "object",
+                                    "context",
+                                    "timestamp"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "statement"
+                        ]
+                    }
+                }
+            },
+            {
+                "description": "Trace records are sequential",
+                "aspect": "sequential",
+                "evaluation": {
+                    "target": "statement.timestamp",
+                    "type": "ascending"
+                }
+            },
+            {
+                "description": "Check if records within expected time range",
+                "aspect": "time_range",
+                "evaluation": {
+                    "target": "statement.timestamp",
+                    "measurement": 1,
+                    "unit": "week"
+                }
+            },
+            {
+                "description": "Check number of xAPI records",
+                "aspect": "amount",
+                "evaluation": {
+                    "min": 20,
+                    "max": 30
+                }
+            }
+        ]
+    }
+}

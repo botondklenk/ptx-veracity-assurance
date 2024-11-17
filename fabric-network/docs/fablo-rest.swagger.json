@@ -40,6 +40,10 @@
                                     "secret": {
                                         "type": "string"
                                     }
+                                },
+                                "example": {
+                                    "id": "admin",
+                                    "secret": "adminpw"
                                 }
                             }
                         }
@@ -163,7 +167,8 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "ptx-veracity"
                     }
                 ],
                 "security": [
@@ -192,7 +197,8 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "ptx-veracity"
                     },
                     {
                         "name": "chaincodeId",
@@ -200,7 +206,8 @@
                         "required": true,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "veracity-proof-handler"
                     }
                 ],
                 "requestBody": {
@@ -244,6 +251,13 @@
                     "transient": {
                         "type": "object"
                     }
+                },
+                "example": {
+                    "method": "get",
+                    "args": [
+                        "test"
+                    ],
+                    "transient": {}
                 }
             }
         },

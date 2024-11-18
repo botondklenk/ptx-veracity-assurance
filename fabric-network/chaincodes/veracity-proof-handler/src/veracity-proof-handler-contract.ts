@@ -1,10 +1,10 @@
 import { Context, Contract } from "fabric-contract-api";
 import { VeracityProof } from "./models";
-import { ERROR, InvokeResponse, SUCCESS, get, put, query } from "./utils";
+import { get, put, query } from "./utils";
 
 export class VeracityProofHandlerContract extends Contract {
     constructor() {
-        super("VeracityStoreContract");
+        super("VeracityProofHandlerContract");
     }
 
     async instantiate() {
@@ -14,10 +14,10 @@ export class VeracityProofHandlerContract extends Contract {
     async getProof(
         ctx: Context,
         exchangeId: string
-    ): Promise<InvokeResponse<VeracityProof>> {
+    ): Promise<VeracityProof> {
         const proof = await get<VeracityProof>(ctx, exchangeId);
-        if (!proof) throw ERROR("Proof not found");
-        return SUCCESS(proof);
+        if (!proof) throw Error("Proof not found");
+        return proof;
     }
 
     async uploadResultHash(
@@ -25,7 +25,7 @@ export class VeracityProofHandlerContract extends Contract {
         exchangeId: string,
         paricipant: string,
         resultHash: string
-    ): Promise<InvokeResponse<VeracityProof>> {
+    ): Promise<VeracityProof> {
         let proof = await get<VeracityProof>(ctx, exchangeId);
         if (proof) {
             proof.results[paricipant] = resultHash;
@@ -47,12 +47,12 @@ export class VeracityProofHandlerContract extends Contract {
             };
         }
         await put(ctx, exchangeId, proof, "veracityProof");
-        return SUCCESS(proof);
+        return proof;
     }
 
-    async queryProofs(ctx: Context): Promise<InvokeResponse<VeracityProof[]>> {
+    async queryProofs(ctx: Context): Promise<VeracityProof[]> {
         const selector = {}
         const result = await query<VeracityProof>(ctx, { selector }, "veracityProof");
-        return SUCCESS(result);
+        return result;
     }
 }

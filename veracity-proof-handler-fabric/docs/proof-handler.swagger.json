@@ -1,0 +1,234 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Veracity Proof Handler API",
+    "version": "1.0.0",
+    "description": "API documentation for the Data Veracity Proof Handler"
+  },
+  "tags": [
+    {
+      "name": "proof",
+      "description": "Operations related to proofs"
+    },
+    {
+      "name": "user",
+      "description": "Operations related to authentication"
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "post": {
+        "summary": "Login",
+        "tags": [
+          "user"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "adminpw"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "token"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proof": {
+      "get": {
+        "summary": "Get all proofs",
+        "tags": [
+          "proof"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Proof"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proof/{exchangeId}": {
+      "parameters": [
+        {
+          "name": "exchangeId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "651f2e8f734ea5932e5c76a2"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get proof by ID",
+        "tags": [
+          "proof"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Proof"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proof/{exchangeId}/{participant}": {
+      "parameters": [
+        {
+          "name": "exchangeId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "651f2e8f734ea5932e5c76a2"
+          }
+        },
+        {
+          "name": "participant",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "participant1"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Upload evaluation result",
+        "tags": [
+          "proof"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resultHash": {
+                    "type": "string",
+                    "example": "0x1234567890abcdef"
+                  }
+                },
+                "required": [
+                  "resultHash"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Proof"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HasedResult": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string",
+          "example": "hash"
+        }
+      },
+      "Proof": {
+        "type": "object",
+        "properties": {
+          "exchangeId": {
+            "type": "string"
+          },
+          "results": {
+            "$ref": "#/components/schemas/HasedResult"
+          },
+          "match": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "exchangeId",
+          "results",
+          "match"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

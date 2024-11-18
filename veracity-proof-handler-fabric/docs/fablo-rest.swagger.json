@@ -273,7 +273,10 @@
                     "message": {
                         "type": "string"
                     }
-                }
+                },
+                "required": [
+                    "message"
+                ]
             },
             "Success": {
                 "type": "object",
@@ -281,7 +284,10 @@
                     "response": {
                         "type": "object"
                     }
-                }
+                },
+                "required": [
+                    "response"
+                ]
             }
         },
         "securitySchemes": {

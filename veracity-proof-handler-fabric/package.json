@@ -1,0 +1,43 @@
+{
+  "name": "veracity-proof-handler-fabric",
+  "version": "1.0.0",
+  "description": "Express server for handling veracity proofs",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "npm run build && node dist/src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "build": "tsc",
+    "lint": "eslint .",
+    "generate-api": "openapi-typescript ./docs/proof-handler.swagger.json --output ./src/generated/api-types.ts",
+    "generate-client": "openapi --input ./docs/fablo-rest.swagger.json --output ./src/generated/fablo-client"
+  },
+  "dependencies": {
+    "@typegoose/typegoose": "^12.9.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "http-status-codes": "^2.3.0",
+    "mongoose": "^8.8.0",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/ajv": "^1.0.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "@types/swagger-ui-express": "^4.1.7",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.31.0",
+    "nodemon": "^3.1.7",
+    "openapi-typescript": "^7.4.2",
+    "openapi-typescript-codegen": "^0.29.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

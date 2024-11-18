@@ -1,15 +1,5 @@
 import { Context } from "fabric-contract-api";
 
-export type InvokeResponse<T> = { error: string } | { success: T };
-
-export function ERROR<Type>(message: string): InvokeResponse<Type> {
-    return { error: message };
-}
-
-export function SUCCESS<Type>(value: Type): InvokeResponse<Type> {
-    return { success: value };
-}
-
 export async function get<Type>(
     ctx: Context, 
     key: string

@@ -1,12 +1,13 @@
 import { Model } from '../utils/requests';
+import { ProofService as client } from '../generated/handler-client';
 
 class ProofService {
     async listProofs(): Promise<Model<'Proof'>[]> {
-        throw new Error('Method not implemented.');
+        return client.listProofs();
     }
 
     async getProof(exchangeId: string): Promise<Model<'Proof'>> {
-        throw new Error('Method not implemented.');
+        return client.getProof(exchangeId);
     }
 }
 

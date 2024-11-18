@@ -3,18 +3,17 @@ import { createError } from "./errors";
 
 export function handleFabloCall<ReturnType>(
     apiCall: () => Promise<Success>,
-    headers?: any, 
+    headers?: any,
 ): Promise<ReturnType> {
     if (headers?.authorization) {
         OpenAPI.HEADERS = { authorization: headers.authorization };
     }
     return apiCall().then((res) => {
         return res.response as ReturnType;
-    })
-    .catch((err) => {
+    }).catch((err) => {
         throw createError(
-            err.status, 
+            err.status,
             err.body.message ?? err.body.mesage // Typo in the fablo code
         );
-    }); 
+    });
 }

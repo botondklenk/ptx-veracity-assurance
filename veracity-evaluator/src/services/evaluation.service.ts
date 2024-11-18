@@ -2,7 +2,10 @@ import { Model } from '../utils/requests';
 import { Evaluation, EvaluationModel, EvaluationStatus, EvaluationResult, VLA } from '../models/Evaluation.model';
 import { createEvaluator } from '../utils/evaluators/factory';
 import { Types } from 'mongoose';
-import { NotFoundError } from '../utils/errors';
+import { BadRequestError, NotFoundError } from '../utils/errors';
+import { ProofService as client } from '../generated/handler-client';
+import crypto from 'crypto';
+import { handleHandlerCall } from '../utils/handler-client';
 
 class EvaluationService {
     async listEvaluations(): Promise<Model<'Evaluation'>[]> {
@@ -75,10 +78,21 @@ class EvaluationService {
     ): Promise<void> {
         const evaluation = await EvaluationModel.findById(exchangeId);
         if (!evaluation) throw new NotFoundError(`Evaluation with id ${exchangeId} not found`);
-
+        if (evaluation.status !== 'STARTED' || status === 'STARTED') {
+            throw new BadRequestError('Ended evaluation cannot be restarted');
+        }
         evaluation.status = status;
-
         await evaluation.save();
+
+        if (status === 'FINISHED') {
+            handleHandlerCall(() => client.uploadResultHash(
+                exchangeId, 
+                'participant', 
+                { 
+                    resultHash: this.createHash(evaluation.result)
+                }
+            ));
+        }
     }
 
     private mapEvaluation(evaluation: Evaluation): Model<'Evaluation'> {
@@ -101,6 +115,10 @@ class EvaluationService {
                 },
             })),
         };
+    }
+
+    private createHash(data: any): string {
+        return crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex');
     }
 }
 

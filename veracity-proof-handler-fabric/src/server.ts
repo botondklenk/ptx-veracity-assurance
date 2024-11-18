@@ -7,11 +7,13 @@ import { requestLogger } from "./middleware/requestLogger";
 import { setupRoutes } from "./routes";
 import swaggerSpec from "../docs/proof-handler.swagger.json";
 import swaggerUI from "swagger-ui-express";
+import { OpenAPI as FabloApiConfig } from "./generated/fablo-client";
 
 
 export const startServer = async (testPort?: number) => {
   const app: Application = express();
   const port = testPort || CONFIG.port || 3000;
+  FabloApiConfig.BASE = CONFIG.fabloUrl;
 
   app.use(express.json());
   app.use(cors());

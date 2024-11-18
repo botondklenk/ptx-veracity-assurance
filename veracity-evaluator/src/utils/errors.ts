@@ -25,3 +25,21 @@ export class ForbiddenError extends Error {
         this.name = "ForbiddenError";
     }
 }
+
+export function createError(
+    statusCode: number, 
+    message: string
+): Error {
+    switch (statusCode) {
+        case 400:
+            return new BadRequestError(message);
+        case 401:
+            return new UnauthorizedError(message);
+        case 403:
+            return new ForbiddenError(message);
+        case 404:
+            return new NotFoundError(message);
+        default:
+            return new Error(message);
+    }
+}

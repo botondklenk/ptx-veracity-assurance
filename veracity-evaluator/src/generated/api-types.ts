@@ -334,13 +334,11 @@ export interface components {
             vla: components["schemas"]["VLA"];
             result: components["schemas"]["EvaluationResult"];
         };
-        HashedResult: {
-            participant: string;
-            resultHash: string;
-        };
         Proof: {
             exchangeId: string;
-            results: components["schemas"]["HashedResult"][];
+            results: {
+                [key: string]: string;
+            };
             match: boolean;
         };
     };

@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
     "build": "tsc",
     "lint": "eslint .",
-    "generate-api": "openapi-typescript ./docs/evaluator.swagger.json --output ./src/generated/api-types.ts"
+    "generate-api": "openapi-typescript ./docs/evaluator.swagger.json --output ./src/generated/api-types.ts",
+    "generate-client": "openapi --input ./docs/proof-handler.swagger.json --output ./src/generated/handler-client"
   },
   "dependencies": {
     "@typegoose/typegoose": "^12.9.0",
@@ -35,7 +36,7 @@
     "eslint-plugin-import": "^2.31.0",
     "nodemon": "^3.1.7",
     "openapi-typescript": "^7.4.2",
-    "swagger-typescript-api": "^13.0.22",
+    "openapi-typescript-codegen": "^0.29.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }

@@ -19,6 +19,7 @@
     "/user/login": {
       "post": {
         "summary": "Login",
+        "operationId": "login",
         "tags": [
           "user"
         ],
@@ -58,7 +59,10 @@
                       "type": "string",
                       "example": "token"
                     }
-                  }
+                  },
+                  "required": [
+                    "token"
+                  ]
                 }
               }
             }
@@ -69,6 +73,7 @@
     "/proof": {
       "get": {
         "summary": "Get all proofs",
+        "operationId": "listProofs",
         "tags": [
           "proof"
         ],
@@ -108,6 +113,7 @@
       ],
       "get": {
         "summary": "Get proof by ID",
+        "operationId": "getProof",
         "tags": [
           "proof"
         ],
@@ -153,6 +159,7 @@
       ],
       "patch": {
         "summary": "Upload evaluation result",
+        "operationId": "uploadResultHash",
         "tags": [
           "proof"
         ],
@@ -197,13 +204,6 @@
   },
   "components": {
     "schemas": {
-      "HasedResult": {
-        "type": "object",
-        "additionalProperties": {
-          "type": "string",
-          "example": "hash"
-        }
-      },
       "Proof": {
         "type": "object",
         "properties": {
@@ -211,7 +211,11 @@
             "type": "string"
           },
           "results": {
-            "$ref": "#/components/schemas/HasedResult"
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "example": "hash"
+            }
           },
           "match": {
             "type": "boolean"

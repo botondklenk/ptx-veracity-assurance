@@ -8,6 +8,7 @@ import { setupRoutes } from "./routes";
 import swaggerSpec from "../docs/evaluator.swagger.json";
 import swaggerUI from "swagger-ui-express";
 import { loadMongoose } from "./config/database";
+import { OpenAPI as HandlerApiConfig } from "./generated/handler-client";
 
 
 export const startServer = async (testPort?: number) => {
@@ -15,6 +16,7 @@ export const startServer = async (testPort?: number) => {
 
   const app: Application = express();
   const port = testPort || CONFIG.port || 3000;
+  HandlerApiConfig.BASE = CONFIG.handlerUrl;
 
   app.use(express.json());
   app.use(cors());

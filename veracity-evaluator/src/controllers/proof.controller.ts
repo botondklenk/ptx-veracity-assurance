@@ -1,14 +1,15 @@
 import { GET } from '../utils/requests';
 import { proofService } from '../services/proof.service';
+import { handleHandlerCall } from '../utils/handler-client';
 
 export const listProofs = GET<'/proof'>(
   async (params, query) => {
-    return await proofService.listProofs();
+    return await handleHandlerCall(() => proofService.listProofs());
   }
 );
 
 export const getProof = GET<'/proof/{exchangeId}'>(
   async (params, query) => {
-    return await proofService.getProof(params.exchangeId);
+    return await handleHandlerCall(() => proofService.getProof(params.exchangeId));
   }
 );

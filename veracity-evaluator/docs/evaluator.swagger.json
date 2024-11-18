@@ -410,21 +410,6 @@
           "result"
         ]
       },
-      "HashedResult": {
-        "type": "object",
-        "properties": {
-          "participant": {
-            "type": "string"
-          },
-          "resultHash": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "participant",
-          "resultHash"
-        ]
-      },
       "Proof": {
         "type": "object",
         "properties": {
@@ -432,9 +417,10 @@
             "type": "string"
           },
           "results": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HashedResult"
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "example": "hash"
             }
           },
           "match": {

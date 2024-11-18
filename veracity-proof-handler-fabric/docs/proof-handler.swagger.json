@@ -197,13 +197,6 @@
   },
   "components": {
     "schemas": {
-      "HasedResult": {
-        "type": "object",
-        "additionalProperties": {
-          "type": "string",
-          "example": "hash"
-        }
-      },
       "Proof": {
         "type": "object",
         "properties": {
@@ -211,7 +204,11 @@
             "type": "string"
           },
           "results": {
-            "$ref": "#/components/schemas/HasedResult"
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "example": "hash"
+            }
           },
           "match": {
             "type": "boolean"

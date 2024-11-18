@@ -41,6 +41,4 @@ async function setAuthorization() {
             password: CONFIG.handlerPassword
         }
     )).token;
-    console.log("Authorization set");
-    console.log(HandlerApiConfig.HEADERS);
 }

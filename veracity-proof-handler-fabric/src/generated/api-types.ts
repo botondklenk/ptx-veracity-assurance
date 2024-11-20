@@ -4,54 +4,6 @@
  */
 
 export interface paths {
-    "/user/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Login */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        /** @example admin */
-                        username: string;
-                        /** @example adminpw */
-                        password: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description Successful response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @example token */
-                            token?: string;
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/proof": {
         parameters: {
             query?: never;
@@ -181,13 +133,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        HasedResult: {
-            participant: string;
-            resultHash: string;
-        };
         Proof: {
             exchangeId: string;
-            results: components["schemas"]["HasedResult"][];
+            results: {
+                [key: string]: string;
+            };
             match: boolean;
         };
     };

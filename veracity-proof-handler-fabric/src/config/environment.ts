@@ -9,4 +9,6 @@ export const CONFIG = {
   channel: process.env.CHANNEL || "ptx-veracity",
   chaincode: process.env.CHAINCODE || "veracity-proof-handler",
   fabloUrl: process.env.FABLO_URL || "http://localhost:8801",
+  fabloUsername: process.env.FABLO_USERNAME || "admin",
+  fabloPassword: process.env.FABLO_PASSWORD || "adminpw",
 };

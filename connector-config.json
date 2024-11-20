@@ -1,0 +1,8 @@
+{
+    "endpoint": "CHANGE_ME",
+    "secretKey": "secretKey",
+    "serviceKey": "serviceKey",
+    "catalogUri": "CHANGE_ME",
+    "consentUri": "CHANGE_ME",
+    "contractUri": "CHANGE_ME"
+  }

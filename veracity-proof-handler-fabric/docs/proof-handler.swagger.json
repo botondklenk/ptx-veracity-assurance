@@ -9,73 +9,14 @@
     {
       "name": "proof",
       "description": "Operations related to proofs"
-    },
-    {
-      "name": "user",
-      "description": "Operations related to authentication"
     }
   ],
   "paths": {
-    "/user/login": {
-      "post": {
-        "summary": "Login",
-        "tags": [
-          "user"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": {
-                    "type": "string",
-                    "example": "admin"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "adminpw"
-                  }
-                },
-                "required": [
-                  "username",
-                  "password"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "example": "token"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/proof": {
       "get": {
         "summary": "Get all proofs",
         "tags": [
           "proof"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
         ],
         "responses": {
           "200": {
@@ -110,11 +51,6 @@
         "summary": "Get proof by ID",
         "tags": [
           "proof"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
         ],
         "responses": {
           "200": {
@@ -155,11 +91,6 @@
         "summary": "Upload evaluation result",
         "tags": [
           "proof"
-        ],
-        "security": [
-          {
-            "BearerAuth": []
-          }
         ],
         "requestBody": {
           "required": true,
@@ -219,12 +150,6 @@
           "results",
           "match"
         ]
-      }
-    },
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }

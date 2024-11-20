@@ -53,6 +53,7 @@
       ],
       "get": {
         "summary": "Get evaluation by ID",
+        "operationId": "getEvaluation",
         "tags": [
           "evaluation"
         ],
@@ -74,6 +75,7 @@
         "tags": [
           "evaluation"
         ],
+        "operationId": "startEvaluation",
         "requestBody": {
           "required": true,
           "content": {
@@ -123,6 +125,7 @@
         "tags": [
           "evaluation"
         ],
+        "operationId": "evaluateData",
         "requestBody": {
           "required": true,
           "content": {
@@ -172,6 +175,7 @@
         "tags": [
           "evaluation"
         ],
+        "operationId": "stopEvaluation",
         "requestBody": {
           "required": true,
           "content": {
@@ -203,6 +207,7 @@
         "tags": [
           "proof"
         ],
+        "operationId": "getProofs",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -237,6 +242,7 @@
         "tags": [
           "proof"
         ],
+        "operationId": "getProof",
         "responses": {
           "200": {
             "description": "Successful response",

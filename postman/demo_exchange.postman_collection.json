@@ -1,0 +1,1042 @@
+{
+	"info": {
+		"_postman_id": "a5c715a7-0a02-4f09-a209-44e342a11365",
+		"name": "demo exchange",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15736626"
+	},
+	"item": [
+		{
+			"name": "setup catalog",
+			"item": [
+				{
+					"name": "get category id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"categoryId\", responseBody._id);\r",
+									"\r",
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{helperUrl}}/category",
+							"host": [
+								"{{helperUrl}}"
+							],
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "setup provider in catalog",
+			"item": [
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"providerServiceKey\", responseBody.participant.serviceKey);\r",
+									"pm.environment.set(\"providerServiceSecretKey\", responseBody.participant.serviceSecretKey);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@uni-x.com\",\n    \"password\": \"1234\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"Admin\",\n    \"participantName\": \"UniX\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/auth/signup",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"providerCatalogAuthToken\", responseBody.token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@uni-x.com\",\n    \"password\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/auth/login",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create dataResource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"providerDataResourceId\", responseBody._id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"aggregationOf\": [],\n    \"name\": \"moodle log\",\n    \"description\": \"Moodle log in xAPI format.\",\n    \"copyrightOwnedBy\": [],\n    \"license\": [],\n    \"policy\": [],\n    \"exposedThrough\": [],\n    \"obsoleteDateTime\": \"\",\n    \"expirationDateTime\": \"\",\n    \"containsPII\": false,\n    \"category\": \"{{categoryId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/dataresources",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"dataresources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create representation for dataResource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"resourceID\": \"{{providerDataResourceId}}\",\r\n    \"url\": \"http://helper-app:3000/data\",\r\n    \"credential\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/representations",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"representations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create serviceOffering that includes dataResource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"providerServiceOfferingId\", responseBody._id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Moodle log API\",\r\n    \"aggregationOf\": [],\r\n    \"dependsOn\": [],\r\n    \"policy\": [],\r\n    \"termsAndConditions\": \"\",\r\n    \"dataProtectionRegime\": [],\r\n    \"dataAccountExport\": [],\r\n    \"location\": \"\",\r\n    \"description\": \"API that handles moodle log in xAPI formmat.\",\r\n    \"keywords\": [],\r\n    \"dataResources\": [\r\n        \"{{providerDataResourceId}}\"\r\n    ],\r\n    \"softwareResources\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/serviceofferings",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"serviceofferings"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{providerCatalogAuthToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "setup consumer in catalog",
+			"item": [
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"consumerServiceKey\", responseBody.participant.serviceKey);\r",
+									"pm.environment.set(\"consumerServiceSecretKey\", responseBody.participant.serviceSecretKey);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@bme.hu\",\n    \"password\": \"1234\",\n    \"firstName\": \"Test\",\n    \"lastName\": \"Admin\",\n    \"participantName\": \"BME\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/auth/signup",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"consumerCatalogAuthToken\", responseBody.token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@bme.hu\",\n    \"password\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/auth/login",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create softwareResource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"consumerSoftwareResourceId\", responseBody._id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"providedBy\": \"string\",\r\n    \"name\": \"moodle log store\",\r\n    \"description\": \"API that stores Moodle log in xAPI format\",\r\n    \"aggregationOf\": [],\r\n    \"copyrightOwnedBy\": [],\r\n    \"license\": [],\r\n    \"policy\": [\r\n        \"string\"\r\n    ],\r\n    \"category\": \"{{categoryId}}\",\r\n    \"locationAddress\": [\r\n        {\r\n            \"countryCode\": \"string\"\r\n        }\r\n    ],\r\n    \"users_clients\": 0,\r\n    \"demo_link\": \"string\",\r\n    \"relevant_project_link\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/softwareresources",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"softwareresources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create representation for softwareResource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"resourceID\": \"{{consumerSoftwareResourceId}}\",\r\n    \"url\": \"http://helper-app:3000/data\",\r\n    \"credential\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/representations",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"representations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create serviceOffering that includes softwareResource",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"consumerServiceOfferingId\", responseBody._id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Moodle log API\",\r\n    \"aggregationOf\": [],\r\n    \"dependsOn\": [],\r\n    \"policy\": [],\r\n    \"termsAndConditions\": \"\",\r\n    \"dataProtectionRegime\": [],\r\n    \"dataAccountExport\": [],\r\n    \"location\": \"\",\r\n    \"description\": \"API that handles moodle log in xAPI formmat.\",\r\n    \"keywords\": [],\r\n    \"dataResources\": [],\r\n    \"softwareResources\": [\r\n        \"{{consumerSoftwareResourceId}}\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogUrl}}/serviceofferings",
+							"host": [
+								"{{catalogUrl}}"
+							],
+							"path": [
+								"serviceofferings"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{consumerCatalogAuthToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "setup provider connector",
+			"item": [
+				{
+					"name": "login default",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"providerConnectorAuthToken\", responseBody.content.token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"secretKey\": \"secretKey\",\r\n    \"serviceKey\": \"serviceKey\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{providerUrl}}/login",
+							"host": [
+								"{{providerUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "configuration update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"endpoint\": \"http://provider-dsc:3000/\",\r\n    \"secretKey\": \"{{providerServiceSecretKey}}\",\r\n    \"serviceKey\": \"{{providerServiceKey}}\",\r\n    \"catalogUri\": \"http://catalog-api:4040/v1/\",\r\n    \"consentUri\": \"http://example:0000/\",\r\n    \"contractUri\": \"http://contract-manager:8888/\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{providerUrl}}/private/configuration",
+							"host": [
+								"{{providerUrl}}"
+							],
+							"path": [
+								"private",
+								"configuration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"providerConnectorAuthToken\", responseBody.content.token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"secretKey\": \"{{providerServiceSecretKey}}\",\r\n    \"serviceKey\": \"{{providerServiceKey}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{providerUrl}}/login",
+							"host": [
+								"{{providerUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{providerConnectorAuthToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "setup consumer connector",
+			"item": [
+				{
+					"name": "login default",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"consumerConnectorAuthToken\", responseBody.content.token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"secretKey\": \"secretKey\",\n    \"serviceKey\": \"serviceKey\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{consumerUrl}}/login",
+							"host": [
+								"{{consumerUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "configuration update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"endpoint\": \"http://consumer-dsc:3000/\",\n    \"secretKey\": \"{{consumerServiceSecretKey}}\",\n    \"serviceKey\": \"{{consumerServiceKey}}\",\n    \"catalogUri\": \"http://catalog-api:4040/v1/\",\n    \"consentUri\": \"http://example:0000/\",\n    \"contractUri\": \"http://contract-manager:8888/\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{consumerUrl}}/private/configuration",
+							"host": [
+								"{{consumerUrl}}"
+							],
+							"path": [
+								"private",
+								"configuration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"consumerConnectorAuthToken\", responseBody.content.token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"secretKey\": \"{{consumerServiceSecretKey}}\",\n    \"serviceKey\": \"{{consumerServiceKey}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{consumerUrl}}/login",
+							"host": [
+								"{{consumerUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{consumerConnectorAuthToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "setup contract",
+			"item": [
+				{
+					"name": "create contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();\r",
+									"pm.environment.set(\"contractId\", responseBody._id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"contract\": {\r\n        \"serviceOfferings\": [\r\n            {\r\n                \"participant\": \"http://provider-dsc:3000/\",\r\n                \"serviceOffering\": \"http://catalog-api:4040/v1/serviceofferings/{{providerServiceOfferingId}}\",\r\n                \"policies\": []\r\n            },\r\n            {\r\n                \"participant\": \"http://consumer-dsc:3000/\",\r\n                \"serviceOffering\": \"http://catalog-api:4040/v1/serviceofferings/{{consumerServiceOfferingId}}\",\r\n                \"policies\": []\r\n            }\r\n        ],\r\n        \"rolesAndObligations\": [],\r\n        \"dataProcessings\": [],\r\n        \"purpose\": [],\r\n        \"members\": [],\r\n        \"revokedMembers\": [],\r\n        \"status\": \"signed\",\r\n        \"vla\": {\r\n            \"meta\": {\r\n                \"description\": \"VLA for xAPI data\",\r\n                \"provider\": \"UniX\",\r\n                \"consumer\": \"BME\",\r\n                \"dataType\": \"JSON\",\r\n                \"status\": \"SINGED\",\r\n                \"timestamp\": \"2024-03-01T00:00:00.000Z\"\r\n            },\r\n            \"objectives\": [\r\n                {\r\n                    \"description\": \"xAPI schema validation\",\r\n                    \"aspect\": \"syntax\",\r\n                    \"evaluation\": {\r\n                        \"schema\": {\r\n                            \"type\": \"object\",\r\n                            \"properties\": {\r\n                                \"statement\": {\r\n                                    \"type\": \"object\",\r\n                                    \"properties\": {\r\n                                        \"actor\": {\r\n                                            \"type\": \"object\",\r\n                                            \"properties\": {\r\n                                                \"account\": {\r\n                                                    \"type\": \"object\",\r\n                                                    \"properties\": {\r\n                                                        \"name\": {\r\n                                                            \"type\": \"string\"\r\n                                                        },\r\n                                                        \"homePage\": {\r\n                                                            \"type\": \"string\",\r\n                                                            \"format\": \"uri\"\r\n                                                        }\r\n                                                    },\r\n                                                    \"required\": [\r\n                                                        \"name\",\r\n                                                        \"homePage\"\r\n                                                    ]\r\n                                                }\r\n                                            },\r\n                                            \"required\": [\r\n                                                \"account\"\r\n                                            ]\r\n                                        },\r\n                                        \"verb\": {\r\n                                            \"type\": \"object\",\r\n                                            \"properties\": {\r\n                                                \"id\": {\r\n                                                    \"type\": \"string\",\r\n                                                    \"format\": \"uri\"\r\n                                                }\r\n                                            },\r\n                                            \"required\": [\r\n                                                \"id\"\r\n                                            ]\r\n                                        },\r\n                                        \"object\": {\r\n                                            \"type\": \"object\",\r\n                                            \"properties\": {\r\n                                                \"id\": {\r\n                                                    \"type\": \"string\",\r\n                                                    \"format\": \"uri\"\r\n                                                },\r\n                                                \"definition\": {\r\n                                                    \"type\": \"object\",\r\n                                                    \"properties\": {\r\n                                                        \"type\": {\r\n                                                            \"type\": \"string\",\r\n                                                            \"format\": \"uri\"\r\n                                                        },\r\n                                                        \"name\": {\r\n                                                            \"type\": \"object\",\r\n                                                            \"properties\": {\r\n                                                                \"en\": {\r\n                                                                    \"type\": \"string\"\r\n                                                                }\r\n                                                            },\r\n                                                            \"required\": [\r\n                                                                \"en\"\r\n                                                            ]\r\n                                                        }\r\n                                                    },\r\n                                                    \"required\": [\r\n                                                        \"type\",\r\n                                                        \"name\"\r\n                                                    ]\r\n                                                }\r\n                                            },\r\n                                            \"required\": [\r\n                                                \"id\",\r\n                                                \"definition\"\r\n                                            ]\r\n                                        },\r\n                                        \"context\": {\r\n                                            \"type\": \"object\",\r\n                                            \"properties\": {\r\n                                                \"contextActivities\": {\r\n                                                    \"type\": \"object\",\r\n                                                    \"properties\": {\r\n                                                        \"category\": {\r\n                                                            \"type\": \"array\",\r\n                                                            \"items\": {\r\n                                                                \"type\": \"object\",\r\n                                                                \"properties\": {\r\n                                                                    \"id\": {\r\n                                                                        \"type\": \"string\",\r\n                                                                        \"format\": \"uri\"\r\n                                                                    },\r\n                                                                    \"definition\": {\r\n                                                                        \"type\": \"object\",\r\n                                                                        \"properties\": {\r\n                                                                            \"type\": {\r\n                                                                                \"type\": \"string\",\r\n                                                                                \"format\": \"uri\"\r\n                                                                            }\r\n                                                                        },\r\n                                                                        \"required\": [\r\n                                                                            \"type\"\r\n                                                                        ]\r\n                                                                    }\r\n                                                                },\r\n                                                                \"required\": [\r\n                                                                    \"id\",\r\n                                                                    \"definition\"\r\n                                                                ]\r\n                                                            }\r\n                                                        }\r\n                                                    },\r\n                                                    \"required\": [\r\n                                                        \"category\"\r\n                                                    ]\r\n                                                }\r\n                                            },\r\n                                            \"required\": [\r\n                                                \"contextActivities\"\r\n                                            ]\r\n                                        },\r\n                                        \"timestamp\": {\r\n                                            \"type\": \"string\",\r\n                                            \"format\": \"date-time\"\r\n                                        }\r\n                                    },\r\n                                    \"required\": [\r\n                                        \"actor\",\r\n                                        \"verb\",\r\n                                        \"object\",\r\n                                        \"context\",\r\n                                        \"timestamp\"\r\n                                    ]\r\n                                }\r\n                            },\r\n                            \"required\": [\r\n                                \"statement\"\r\n                            ]\r\n                        }\r\n                    }\r\n                },\r\n                {\r\n                    \"description\": \"Check if records within expected time range\",\r\n                    \"aspect\": \"time_range\",\r\n                    \"evaluation\": {\r\n                        \"target\": \"statement.timestamp\",\r\n                        \"measurement\": 1,\r\n                        \"unit\": \"week\"\r\n                    }\r\n                },\r\n                {\r\n                    \"description\": \"Trace records are sequential\",\r\n                    \"aspect\": \"sequential\",\r\n                    \"evaluation\": {\r\n                        \"target\": \"statement.timestamp\",\r\n                        \"type\": \"ascending\"\r\n                    }\r\n                },\r\n                {\r\n                    \"description\": \"Check number of xAPI records\",\r\n                    \"aspect\": \"amount\",\r\n                    \"evaluation\": {\r\n                        \"min\": 20,\r\n                        \"max\": 30\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{contractUrl}}/contracts",
+							"host": [
+								"{{contractUrl}}"
+							],
+							"path": [
+								"contracts"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "trigger exchange",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{consumerConnectorAuthToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"contract\": \"http://contract-manager:8888/contracts/{{contractId}}\",\r\n    \"purposeId\": \"http://catalog-api:4040/v1/serviceofferings/{{consumerServiceOfferingId}}\",\r\n    \"resourceId\": \"http://catalog-api:4040/v1/serviceofferings/{{providerServiceOfferingId}}\",\r\n    \"resources\": [\r\n        {\r\n            \"resource\": \"{{providerDataResourceId}}\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{consumerUrl}}/consumer/exchange",
+					"host": [
+						"{{consumerUrl}}"
+					],
+					"path": [
+						"consumer",
+						"exchange"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

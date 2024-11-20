@@ -9,7 +9,6 @@ export const getAllProofs = GET<'/proof'>(
   async (params, query, headers) => {
     return await handleFabloCall<Model<'Proof'>[]>(
         () => proofService.getAllProofs(), 
-        headers
     );
   }
 );
@@ -18,7 +17,6 @@ export const getProofById = GET<'/proof/{exchangeId}'>(
   async (params, query, headers) => {
     return await handleFabloCall<Model<'Proof'>>(
         () => proofService.getProofById(params.exchangeId),
-        headers
     );
   }
 );
@@ -31,7 +29,6 @@ export const uploadEvaluationResult = PATCH<'/proof/{exchangeId}/{participant}'>
           params.participant, 
           body.resultHash
         ),
-        headers
     );
   }
 );

@@ -6,6 +6,7 @@ import { BadRequestError, NotFoundError } from '../utils/errors';
 import { ProofService as client } from '../generated/handler-client';
 import crypto from 'crypto';
 import { handleHandlerCall } from '../utils/handler-client';
+import { CONFIG } from '../config/environment';
 
 class EvaluationService {
     async listEvaluations(): Promise<Model<'Evaluation'>[]> {
@@ -78,16 +79,17 @@ class EvaluationService {
     ): Promise<void> {
         const evaluation = await EvaluationModel.findById(exchangeId);
         if (!evaluation) throw new NotFoundError(`Evaluation with id ${exchangeId} not found`);
-        if (evaluation.status !== 'STARTED' || status === 'STARTED') {
+        if (evaluation.status !== 'STARTED') {
             throw new BadRequestError('Ended evaluation cannot be restarted');
         }
         evaluation.status = status;
         await evaluation.save();
 
         if (status === 'FINISHED') {
+            // this is not awaited, so it will not block the exchange
             handleHandlerCall(() => client.uploadResultHash(
                 exchangeId, 
-                'participant', 
+                CONFIG.participant, 
                 { 
                     resultHash: this.createHash(evaluation.result)
                 }

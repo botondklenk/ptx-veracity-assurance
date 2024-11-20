@@ -1,44 +1,23 @@
-import { CONFIG } from "../config/environment";
-import { OpenAPI as HandlerApiConfig, UserService } from "../generated/handler-client";
 import { createError } from "./errors";
-
-let authorization: string | undefined;
 
 export async function handleHandlerCall<ReturnType>(
     apiCall: () => Promise<ReturnType>,
+    retries = 5
 ): Promise<ReturnType> {
-    if (!authorization) {
-        await setAuthorization();
-    }
-    let error: any;
-    let response!: ReturnType;
-    await apiCall().then(
-        (res) => { response = res }
-    ).catch(
-        (err) => { error = err; }
-    );
-    if (error && error.status === 403) {
-        await setAuthorization();
-        await apiCall().then(
-            (res) => { response = res }
-        ).catch(
-            (err) => { error = err; }
-        );
-    }
-    if (error) {
-        throw createError(
-            error.status,
-            error.body.error
-        );
-    }
-    return response;
-}
 
-async function setAuthorization() {
-    HandlerApiConfig.TOKEN = (await UserService.login(
-        {
-            username: CONFIG.handlerUsername,
-            password: CONFIG.handlerPassword
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            return await apiCall();
+        } catch (error: any) {
+            if (error.body?.error === 'MVCC_READ_CONFLICT' && attempt < retries) {
+                // Log and retry after a short delay
+                console.warn(`MVCC conflict detected, retrying... (${attempt}/${retries})`);
+                await new Promise((resolve) => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+            } else {
+                throw createError(error.status, error.body?.error || 'Unknown error');
+            }
         }
-    )).token;
+    }
+
+    throw createError(500, 'Exceeded retry attempts for MVCC conflict');
 }
